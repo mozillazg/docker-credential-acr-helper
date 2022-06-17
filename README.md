@@ -1,0 +1,1 @@
+# docker-credential-acr-helper
