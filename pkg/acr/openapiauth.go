@@ -17,7 +17,11 @@ const (
 var defaultProfilePath = filepath.Join("~", ".alibabacloud", "credentials")
 
 func getOpenapiAuth() (credentials.Credential, error) {
-	path, err := expandPath(defaultProfilePath)
+	profilePath := defaultProfilePath
+	if os.Getenv(credentials.ENVCredentialFile) != "" {
+		profilePath = os.Getenv(credentials.ENVCredentialFile)
+	}
+	path, err := expandPath(profilePath)
 	if err == nil {
 		_ = os.Setenv(credentials.ENVCredentialFile, path)
 	}
