@@ -26,6 +26,7 @@ Place the `docker-credential-acr-helper` binary on your `PATH` and set the conte
 {
 	"credHelpers": {
 		"registry.cn-beijing.aliyuncs.com": "acr-helper",
+		"registry-intl.ap-southeast-1.aliyuncs.com": "acr-helper",
 		"registry.<region>.aliyuncs.com": "acr-helper",
 		"<acr-ee-instance-name>-registry.<region>.cr.aliyuncs.com": "acr-helper"
 	}
