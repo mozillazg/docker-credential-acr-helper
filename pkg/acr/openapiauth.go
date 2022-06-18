@@ -23,7 +23,9 @@ func getOpenapiAuth() (credentials.Credential, error) {
 	}
 	path, err := expandPath(profilePath)
 	if err == nil {
-		_ = os.Setenv(credentials.ENVCredentialFile, path)
+		if _, err := os.Stat(path); err == nil {
+			_ = os.Setenv(credentials.ENVCredentialFile, path)
+		}
 	}
 	var conf *credentials.Config
 
