@@ -25,7 +25,7 @@ func NewACRHelper() *ACRHelper {
 	}
 }
 
-func (a *ACRHelper) WithLogger(w io.Writer) *ACRHelper {
+func (a *ACRHelper) WithLoggerOut(w io.Writer) *ACRHelper {
 	logger := logrus.New()
 	logger.Out = w
 	a.logger = logger
