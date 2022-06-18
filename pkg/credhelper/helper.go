@@ -6,6 +6,7 @@ import (
 
 	"github.com/docker/docker-credential-helpers/credentials"
 	"github.com/mozillazg/docker-credential-acr-helper/pkg/acr"
+	"github.com/mozillazg/docker-credential-acr-helper/pkg/version"
 	"github.com/sirupsen/logrus"
 )
 
@@ -23,8 +24,11 @@ func (a *ACRHelper) Get(serverURL string) (string, string, error) {
 	// TODO: add cache
 	cred, err := a.client.GetCredentials(serverURL)
 	if err != nil {
-		logrus.WithField("serverURL", serverURL).WithError(err).Error("get credentials failed")
-		return "", "", fmt.Errorf("get credentials for %q failed: %+v", serverURL, err)
+		logrus.WithField("name", version.ProjectName).
+			WithField("serverURL", serverURL).
+			WithError(err).Error("get credentials failed")
+		return "", "", fmt.Errorf("%s: get credentials for %q failed: %s",
+			version.ProjectName, serverURL, err)
 	}
 	return cred.UserName, cred.Password, nil
 }
