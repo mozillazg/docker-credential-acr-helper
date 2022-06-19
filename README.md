@@ -22,8 +22,8 @@ By default, the helper searches for ACR credentials in the following order:
 4. A profile file in a default location:
    * On Windows, this is `C:\Users\USER_NAME\.alibabacloud\credentials`.
    * On other systems, it is `~/.alibabacloud/credentials`.
-5. On Alibaba Cloud Elastic Compute Service, Alibaba Cloud Container Service for Kubernetes (ACK), 
-   it fetches the credentials of the RAM Role associated with the VM from the metadata server (if available).
+5. It fetches the credentials of the RAM Role associated with the VM from the metadata server when
+   the environment variable `ALIBABA_CLOUD_ECS_METADATA` is defined and not empty.
 
 For more information about configuring credentials, see [Provider](https://github.com/aliyun/credentials-go#provider)
 in the @aliyun/credentials-go.
