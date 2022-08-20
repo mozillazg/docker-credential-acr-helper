@@ -5,7 +5,8 @@ metadata:
 spec:
   serviceAccountName: default
   containers:
-    - args:
+    - command:
+        - /app/get-acr-digest
         - <REPO>
       image: mozillazg/get-acr-digest:0.1.0
       imagePullPolicy: Always
@@ -25,6 +26,8 @@ spec:
           cpu: 100m
           memory: 10Mi
       securityContext:
+        seccompProfile:
+          type: RuntimeDefult
         allowPrivilegeEscalation: false
         privileged: false
         runAsNonRoot: true
@@ -40,6 +43,7 @@ spec:
           readOnly: true
   nodeSelector:
     kubernetes.io/os: linux
+  restartPolicy: Never
   volumes:
     - name: rrsa-oidc-token
       projected:
