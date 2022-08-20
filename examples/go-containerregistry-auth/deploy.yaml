@@ -27,7 +27,7 @@ spec:
           memory: 10Mi
       securityContext:
         seccompProfile:
-          type: RuntimeDefult
+          type: RuntimeDefault
         allowPrivilegeEscalation: false
         privileged: false
         runAsNonRoot: true
