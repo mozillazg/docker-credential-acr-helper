@@ -14,7 +14,7 @@ func main() {
 		authn.DefaultKeychain,
 		authn.NewKeychainFromHelper(credhelper.NewACRHelper()),
 	)
-	ref := os.Getenv("REPO_URL")
+	ref := os.Args[1]
 	digest, err := crane.Digest(ref, crane.WithAuthFromKeychain(kc))
 	if err != nil {
 		panic(err)

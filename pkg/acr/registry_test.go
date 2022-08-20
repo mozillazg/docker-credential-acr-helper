@@ -1,6 +1,7 @@
 package acr
 
 import (
+	"os"
 	"reflect"
 	"testing"
 )
@@ -133,5 +134,32 @@ func Test_parseServerURL(t *testing.T) {
 				t.Errorf("parseServerURL() got = %v, want %v", got, tt.want)
 			}
 		})
+	}
+}
+
+func Test_parseServerURL_with_env(t *testing.T) {
+	defer os.Unsetenv(envRegion)
+	defer os.Unsetenv(envInstanceId)
+
+	region := "cn-beijing-xx"
+	instanceId := "cr-xx-yy"
+	os.Setenv(envRegion, region)
+	os.Setenv(envInstanceId, instanceId)
+
+	domain := "example.com"
+	want := &Registry{
+		IsEE:         true,
+		InstanceId:   instanceId,
+		InstanceName: "",
+		Region:       region,
+		Domain:       domain,
+	}
+	got, err := parseServerURL(domain)
+	if err != nil {
+		t.Errorf("want no error, but got %+v", err)
+		return
+	}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("parseServerURL() got = %v, want %v", got, want)
 	}
 }

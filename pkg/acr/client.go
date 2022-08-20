@@ -23,11 +23,13 @@ func (c *Client) GetCredentials(serverURL string) (*Credentials, error) {
 		if err != nil {
 			return nil, err
 		}
-		instanceId, err := client.getInstanceId(registry.InstanceName)
-		if err != nil {
-			return nil, err
+		if registry.InstanceId == "" {
+			instanceId, err := client.getInstanceId(registry.InstanceName)
+			if err != nil {
+				return nil, err
+			}
+			registry.InstanceId = instanceId
 		}
-		registry.InstanceId = instanceId
 		return client.getCredentials(registry.InstanceId)
 	}
 
