@@ -4,14 +4,9 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper"
 	"github.com/aliyun/credentials-go/credentials"
 	"github.com/mozillazg/docker-credential-acr-helper/pkg/version"
-)
-
-const (
-	envRoleArn       = "ALIBABA_CLOUD_ROLE_ARN"
-	envOidcArn       = "ALIBABA_CLOUD_OIDC_PROVIDER_ARN"
-	envOidcTokenFile = "ALIBABA_CLOUD_OIDC_TOKEN_FILE"
 )
 
 var defaultProfilePath = filepath.Join("~", ".alibabacloud", "credentials")
@@ -29,16 +24,8 @@ func getOpenapiAuth() (credentials.Credential, error) {
 	}
 	var conf *credentials.Config
 
-	roleArn := os.Getenv(envRoleArn)
-	oidcArn := os.Getenv(envOidcArn)
-	tokenFile := os.Getenv(envOidcTokenFile)
-	if roleArn != "" && oidcArn != "" && tokenFile != "" {
-		conf = new(credentials.Config).
-			SetType("oidc_role_arn").
-			SetOIDCProviderArn(oidcArn).
-			SetOIDCTokenFilePath(tokenFile).
-			SetRoleArn(roleArn).
-			SetRoleSessionName(version.ProjectName)
+	if helper.HaveOidcCredentialRequiredEnv() {
+		return helper.NewOidcCredential(version.ProjectName)
 	}
 
 	cred, err := credentials.NewCredential(conf)
