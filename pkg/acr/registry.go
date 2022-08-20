@@ -60,7 +60,7 @@ func parseServerURL(rawURL string) (*Registry, error) {
 	}
 
 	// parse domain to get acr ee instance info
-	if registry.InstanceId == "" {
+	if registry.InstanceId == "" || registry.Region == "" {
 		subItems := domainPattern.FindStringSubmatch(domain)
 		if len(subItems) != 3 {
 			return nil, errUnknownDomain
