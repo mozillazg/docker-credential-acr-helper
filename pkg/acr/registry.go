@@ -3,6 +3,7 @@ package acr
 import (
 	"errors"
 	"net/url"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -14,6 +15,9 @@ var domainPattern = regexp.MustCompile(
 const (
 	urlPrefix      = "https://"
 	hostNameSuffix = ".aliyuncs.com"
+
+	envInstanceId = "DOCKER_CREDENTIAL_ACR_HELPER_INSTANCE_ID"
+	envRegion     = "DOCKER_CREDENTIAL_ACR_HELPER_REGION"
 )
 
 type Registry struct {
@@ -25,9 +29,13 @@ type Registry struct {
 }
 
 func parseServerURL(rawURL string) (*Registry, error) {
-	if !strings.Contains(rawURL, hostNameSuffix) {
-		return nil, errUnknownDomain
+	instanceId := os.Getenv(envInstanceId)
+	if instanceId == "" {
+		if !strings.Contains(rawURL, hostNameSuffix) {
+			return nil, errUnknownDomain
+		}
 	}
+
 	if !strings.HasPrefix(rawURL, urlPrefix) {
 		rawURL = urlPrefix + rawURL
 	}
@@ -36,23 +44,31 @@ func parseServerURL(rawURL string) (*Registry, error) {
 		return nil, err
 	}
 	domain := serverURL.Hostname()
-	if !strings.HasSuffix(domain, hostNameSuffix) {
-		return nil, errUnknownDomain
+
+	if instanceId == "" {
+		if !strings.HasSuffix(domain, hostNameSuffix) {
+			return nil, errUnknownDomain
+		}
 	}
 
-	subItems := domainPattern.FindStringSubmatch(domain)
-	if len(subItems) != 3 {
-		return nil, errUnknownDomain
-	}
-	instanceName := subItems[1]
-	region := subItems[2]
-	isEE := instanceName != ""
-
-	return &Registry{
-		IsEE:         isEE,
-		InstanceId:   "",
-		InstanceName: instanceName,
-		Region:       region,
+	registry := &Registry{
+		IsEE:         instanceId != "",
+		InstanceId:   instanceId,
+		InstanceName: "",
+		Region:       os.Getenv(envRegion),
 		Domain:       domain,
-	}, nil
+	}
+
+	// parse domain to get acr ee instance info
+	if registry.InstanceId == "" {
+		subItems := domainPattern.FindStringSubmatch(domain)
+		if len(subItems) != 3 {
+			return nil, errUnknownDomain
+		}
+		registry.InstanceName = subItems[1]
+		registry.Region = subItems[2]
+		registry.IsEE = registry.InstanceName != ""
+	}
+
+	return registry, nil
 }
