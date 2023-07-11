@@ -10,7 +10,7 @@ require (
 	github.com/alibabacloud-go/tea-utils v1.4.4
 	github.com/aliyun/credentials-go v1.2.3
 	github.com/docker/docker-credential-helpers v0.6.4
-	github.com/sirupsen/logrus v1.8.1
+	github.com/sirupsen/logrus v1.9.0
 )
 
 require (
@@ -26,7 +26,6 @@ require (
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
 	golang.org/x/net v0.0.0-20200506145744-7e3656a0809f // indirect
-	golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c // indirect
+	golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 // indirect
 	gopkg.in/ini.v1 v1.56.0 // indirect
-	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
