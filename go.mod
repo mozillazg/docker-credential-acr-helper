@@ -3,6 +3,7 @@ module github.com/mozillazg/docker-credential-acr-helper
 go 1.17
 
 require (
+	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0
 	github.com/alibabacloud-go/cr-20160607 v1.0.1
 	github.com/alibabacloud-go/cr-20181201 v1.0.10
 	github.com/alibabacloud-go/darabonba-openapi v0.1.18
@@ -10,11 +11,10 @@ require (
 	github.com/alibabacloud-go/tea-utils v1.4.4
 	github.com/aliyun/credentials-go v1.2.3
 	github.com/docker/docker-credential-helpers v0.6.4
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.3
 )
 
 require (
-	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0 // indirect
 	github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.4 // indirect
 	github.com/alibabacloud-go/debug v0.0.0-20190504072949-9472017b5c68 // indirect
 	github.com/alibabacloud-go/endpoint-util v1.1.1 // indirect
