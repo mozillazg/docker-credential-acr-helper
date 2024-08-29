@@ -1,6 +1,6 @@
 module github.com/mozillazg/docker-credential-acr-helper
 
-go 1.17
+go 1.18
 
 require (
 	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/alibabacloudsdkgo/helper v0.2.0
@@ -10,7 +10,7 @@ require (
 	github.com/alibabacloud-go/tea v1.1.18
 	github.com/alibabacloud-go/tea-utils v1.4.4
 	github.com/aliyun/credentials-go v1.3.2
-	github.com/docker/docker-credential-helpers v0.6.4
+	github.com/docker/docker-credential-helpers v0.8.0
 	github.com/sirupsen/logrus v1.9.3
 )
 
