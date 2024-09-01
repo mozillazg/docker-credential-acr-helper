@@ -2,6 +2,7 @@ package acr
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"time"
 
 	cr2018 "github.com/alibabacloud-go/cr-20181201/client"
@@ -14,8 +15,8 @@ type eeClient struct {
 	client *cr2018.Client
 }
 
-func newEEClient(region string) (*eeClient, error) {
-	cred, err := getOpenapiAuth()
+func newEEClient(region string, logger *logrus.Logger) (*eeClient, error) {
+	cred, err := getOpenapiAuth(logger)
 	if err != nil {
 		return nil, err
 	}
