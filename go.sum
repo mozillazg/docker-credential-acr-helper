@@ -1,5 +1,5 @@
-github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.14.0 h1:kcnfY4vljxXliXDBrA9K9lwF8IoEZ4Up6Eg9kWTIm28=
-github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.14.0/go.mod h1:tlqp9mUGbsP+0z3Q+c0Q5MgSdq/OMwQhm5bffR3Q3ss=
+github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.15.1 h1:PYdhq1Gu5r3/qcSWI4YNgBN8Jx2qNan9bAzCo+wj9EE=
+github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.15.1/go.mod h1:tlqp9mUGbsP+0z3Q+c0Q5MgSdq/OMwQhm5bffR3Q3ss=
 github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.2/go.mod h1:sCavSAvdzOjul4cEqeVtvlSaSScfNsTQ+46HwlTL1hc=
 github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.4 h1:iC9YFYKDGEy3n/FtqJnOkZsene9olVspKmkX5A2YBEo=
 github.com/alibabacloud-go/alibabacloud-gateway-spi v0.0.4/go.mod h1:sCavSAvdzOjul4cEqeVtvlSaSScfNsTQ+46HwlTL1hc=
