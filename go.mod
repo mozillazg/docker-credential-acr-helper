@@ -10,7 +10,7 @@ require (
 	github.com/alibabacloud-go/tea v1.2.2
 	github.com/alibabacloud-go/tea-utils v1.4.4
 	github.com/aliyun/credentials-go v1.4.5
-	github.com/docker/docker-credential-helpers v0.8.0
+	github.com/docker/docker-credential-helpers v0.9.3
 	github.com/sirupsen/logrus v1.9.3
 )
 
