@@ -3,7 +3,7 @@ module github.com/mozillazg/docker-credential-acr-helper
 go 1.18
 
 require (
-	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.15.1
+	github.com/AliyunContainerService/ack-ram-tool/pkg/credentials/provider v0.17.0
 	github.com/alibabacloud-go/cr-20160607 v1.0.1
 	github.com/alibabacloud-go/cr-20181201 v1.0.10
 	github.com/alibabacloud-go/darabonba-openapi v0.1.18
