@@ -36,7 +36,8 @@ func newEEClient(region string, ramCred credentials.Credential, logger *logrus.L
 	return &eeClient{client: client}, nil
 }
 
-func (c *eeClient) getInstanceId(instanceName string) (string, error) {
+func (c *eeClient) getInstanceId(registry Registry) (string, error) {
+	instanceName := registry.InstanceName
 	req := &cr2018.ListInstanceRequest{
 		InstanceName: tea.String(instanceName),
 	}
@@ -60,7 +61,8 @@ func (c *eeClient) getInstanceId(instanceName string) (string, error) {
 	return "", fmt.Errorf("get ACR EE instance id for name %q failed: instance name is not found", instanceName)
 }
 
-func (c *eeClient) getCredentials(instanceId string) (*Credentials, error) {
+func (c *eeClient) getCredentials(registry Registry) (*Credentials, error) {
+	instanceId := registry.InstanceId
 	req := &cr2018.GetAuthorizationTokenRequest{
 		InstanceId: &instanceId,
 	}
@@ -81,6 +83,7 @@ func (c *eeClient) getCredentials(instanceId string) (*Credentials, error) {
 		UserName:   tea.StringValue(resp.Body.TempUsername),
 		Password:   tea.StringValue(resp.Body.AuthorizationToken),
 		ExpireTime: expTime.Add(-time.Minute),
+		Domain:     registry.Domain,
 	}
 	return cred, nil
 }

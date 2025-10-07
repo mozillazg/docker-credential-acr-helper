@@ -37,7 +37,7 @@ func newPersonClient(region string, ramCred credentials.Credential, logger *logr
 	return &personClient{client: client}, nil
 }
 
-func (c *personClient) getCredentials(instanceId string) (*Credentials, error) {
+func (c *personClient) getCredentials(registry Registry) (*Credentials, error) {
 	resp, err := c.GetAuthorizationToken()
 	if err != nil {
 		return nil, fmt.Errorf("get credentials failed: %w", err)
@@ -52,11 +52,12 @@ func (c *personClient) getCredentials(instanceId string) (*Credentials, error) {
 		UserName:   tea.StringValue(resp.Body.Data.TempUsername),
 		Password:   tea.StringValue(resp.Body.Data.AuthorizationToken),
 		ExpireTime: expTime,
+		Domain:     registry.Domain,
 	}
 	return cred, nil
 }
 
-func (c *personClient) getInstanceId(instanceName string) (string, error) {
+func (c *personClient) getInstanceId(registry Registry) (string, error) {
 	return "", nil
 }
 

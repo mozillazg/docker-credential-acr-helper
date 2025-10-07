@@ -18,7 +18,7 @@ type mockClient struct {
 	instanceCalls int
 }
 
-func (m *mockClient) getCredentials(instanceId string) (*Credentials, error) {
+func (m *mockClient) getCredentials(registry Registry) (*Credentials, error) {
 	m.credCalls++
 	if m.credErr != nil {
 		return nil, m.credErr
@@ -26,7 +26,7 @@ func (m *mockClient) getCredentials(instanceId string) (*Credentials, error) {
 	return m.creds, nil
 }
 
-func (m *mockClient) getInstanceId(instanceName string) (string, error) {
+func (m *mockClient) getInstanceId(registry Registry) (string, error) {
 	m.instanceCalls++
 	if m.instanceIdErr != nil {
 		return "", m.instanceIdErr

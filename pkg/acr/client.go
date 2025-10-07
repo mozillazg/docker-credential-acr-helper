@@ -22,11 +22,12 @@ type Credentials struct {
 	UserName   string
 	Password   string
 	ExpireTime time.Time
+	Domain     string
 }
 
 type ClientInterface interface {
-	getCredentials(instanceId string) (*Credentials, error)
-	getInstanceId(instanceName string) (string, error)
+	getCredentials(registry Registry) (*Credentials, error)
+	getInstanceId(registry Registry) (string, error)
 }
 
 var UserAgent = ""
@@ -61,7 +62,7 @@ func (c *Client) GetCredentials(serverURL string, logger *logrus.Logger) (*Crede
 		return nil, err
 	}
 
-	return c.getCredentials(client, registry.InstanceId)
+	return c.getCredentials(client, *registry)
 }
 
 func (c *Client) WithGetRamCredential(f func(registry Registry, logger *logrus.Logger) (credentials.Credential, error)) *Client {
@@ -74,13 +75,14 @@ func (c *Client) WithRamCredential(cred credentials.Credential) *Client {
 	return c
 }
 
-func (c *Client) getCredentials(client ClientInterface, instanceId string) (*Credentials, error) {
+func (c *Client) getCredentials(client ClientInterface, registry Registry) (*Credentials, error) {
+	instanceId := registry.InstanceId
 	cred, ok := c.credCache.Get(instanceId)
 	if ok && cred.ExpireTime.UTC().Sub(time.Now().UTC()) > time.Minute {
 		return &cred, nil
 	}
 
-	credPtr, err := client.getCredentials(instanceId)
+	credPtr, err := client.getCredentials(registry)
 	if err != nil {
 		return nil, err
 	}
@@ -119,7 +121,7 @@ func (c *Client) insertClient(domain string, client ClientInterface) {
 
 func (c *Client) ensureInstanceId(client ClientInterface, registry *Registry) error {
 	if registry.InstanceId == "" {
-		instanceId, err := client.getInstanceId(registry.InstanceName)
+		instanceId, err := client.getInstanceId(*registry)
 		if err != nil {
 			return err
 		}
