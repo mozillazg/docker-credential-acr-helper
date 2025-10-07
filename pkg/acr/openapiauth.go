@@ -21,8 +21,7 @@ func getOpenapiAuth(logger *logrus.Logger) (credentials.Credential, error) {
 	if os.Getenv(credentials.ENVCredentialFile) != "" {
 		profilePath = os.Getenv(credentials.ENVCredentialFile)
 	}
-	path, err := expandPath(profilePath)
-	if err == nil {
+	if path, err := expandPath(profilePath); err == nil && path != "" {
 		if _, err := os.Stat(path); err == nil {
 			_ = os.Setenv(credentials.ENVCredentialFile, path)
 			return credentials.NewCredential(nil)
@@ -37,7 +36,7 @@ func getOpenapiAuth(logger *logrus.Logger) (credentials.Credential, error) {
 		Logger:                     &logWrapper{logger: logger},
 	})
 
-	return cred, err
+	return cred, nil
 }
 
 func (l *logWrapper) Info(msg string) {
