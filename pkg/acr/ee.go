@@ -2,28 +2,32 @@ package acr
 
 import (
 	"fmt"
+	"github.com/aliyun/credentials-go/credentials"
 	"github.com/sirupsen/logrus"
 	"time"
 
 	cr2018 "github.com/alibabacloud-go/cr-20181201/client"
 	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
 	"github.com/alibabacloud-go/tea/tea"
-	"github.com/mozillazg/docker-credential-acr-helper/pkg/version"
 )
 
 type eeClient struct {
 	client *cr2018.Client
 }
 
-func newEEClient(region string, logger *logrus.Logger) (*eeClient, error) {
-	cred, err := getOpenapiAuth(logger)
-	if err != nil {
-		return nil, err
+func newEEClient(region string, ramCred credentials.Credential, logger *logrus.Logger) (*eeClient, error) {
+	var err error
+	if ramCred == nil {
+		ramCred, err = getOpenapiAuth(logger)
+		if err != nil {
+			return nil, fmt.Errorf("get openapi auth err: %w", err)
+		}
 	}
+
 	c := &openapi.Config{
 		RegionId:   tea.String(region),
-		Credential: cred,
-		UserAgent:  tea.String(version.UserAgent()),
+		Credential: ramCred,
+		UserAgent:  tea.String(UserAgent),
 	}
 	client, err := cr2018.NewClient(c)
 	if err != nil {
@@ -38,7 +42,7 @@ func (c *eeClient) getInstanceId(instanceName string) (string, error) {
 	}
 	resp, err := c.client.ListInstance(req)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("get ACR EE instance id for name %q failed: %w", instanceName, err)
 	}
 	if resp.Body == nil {
 		return "", fmt.Errorf("get ACR EE instance id for name %q failed: %s", instanceName, resp.String())
@@ -62,7 +66,7 @@ func (c *eeClient) getCredentials(instanceId string) (*Credentials, error) {
 	}
 	resp, err := c.client.GetAuthorizationToken(req)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("get credentials failed: %w", err)
 	}
 	if resp.Body == nil {
 		return nil, fmt.Errorf("get credentials failed: %s", resp.String())
