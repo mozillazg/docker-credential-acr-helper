@@ -33,7 +33,7 @@ jobs:
           # either 'goreleaser' (default) or 'goreleaser-pro'
           distribution: goreleaser
           version: latest
-          args: release --snapshot --rm-dist --skip-publish
+          args: release --snapshot --clean --skip=publish
         env:
           GOPATH: ${{ env.HOME }}
 
