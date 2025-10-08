@@ -28,6 +28,17 @@ By default, the helper searches for ACR credentials in the following order:
 For more information about configuring credentials, see [Provider](https://github.com/aliyun/credentials-go#provider)
 in the @aliyun/credentials-go.
 
+### RAM Permissions
+
+The RAM user or RAM role used to access ACR must have the following permissions:
+
+```
+"cr:GetAuthorizationToken",
+"cr:PullRepository",
+"cr:PushRepository",  // if you need to push images
+"cr:ListInstance"
+```
+
 ### Docker
 
 Place the `docker-credential-acr-helper` binary on your `PATH` and
