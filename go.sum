@@ -73,8 +73,8 @@ github.com/modern-go/reflect2 v0.0.0-20180701023420-4b7aa43c6742/go.mod h1:bx2lN
 github.com/modern-go/reflect2 v1.0.1/go.mod h1:bx2lNnkwVCuqBIxFjflWJWanXIb3RllmbCylyMrvgv0=
 github.com/modern-go/reflect2 v1.0.2 h1:xBagoLtFs94CBntxluKeaWgTMpvLxC4ur3nMaC9Gz0M=
 github.com/modern-go/reflect2 v1.0.2/go.mod h1:yWuevngMOJpCy52FWWMvUC8ws7m/LJsjYzDa0/r8luk=
-github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.1.0 h1:uRU6yOTNPMm/JrCbQVJbywYq/cSwyUpHh7JFDLpUF6c=
-github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.1.0/go.mod h1:mLsTFHuvtN2txCSVqdPu+8ySFOqI7GFrr8AkldqxOik=
+github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.2.1 h1:vROka81szocbm4KnpZItm0f80XfWvoGEX/J5k6+KjoE=
+github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.2.1/go.mod h1:mLsTFHuvtN2txCSVqdPu+8ySFOqI7GFrr8AkldqxOik=
 github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e/go.mod h1:zD1mROLANZcx1PVRCS0qkT7pwLkGfwJo4zjcN/Tysno=
 github.com/phuslu/lru v1.0.18 h1:ioKRYLym7nv6UmaKHXSR0Z8s2KCEra+mcWcn9zXQnlM=
 github.com/phuslu/lru v1.0.18/go.mod h1:ci5hb8dRIa+2I+KcPl4958OWCg09FxwZCP8InU1L1ME=
