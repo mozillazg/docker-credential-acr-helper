@@ -14,8 +14,9 @@ type Client struct {
 	ramCred          credentials.Credential
 	getRamCredential func(registry Registry, logger *logrus.Logger) (credentials.Credential, error)
 
-	clientPool *lru.LRUCache[string, ClientInterface]
-	credCache  *lru.TTLCache[string, Credentials]
+	clientPool      *lru.LRUCache[string, ClientInterface]
+	credCache       *lru.TTLCache[string, Credentials]
+	instanceIdCache *lru.LRUCache[string, string]
 }
 
 type Credentials struct {
@@ -40,10 +41,12 @@ func init() {
 func NewClient(cred credentials.Credential) (*Client, error) {
 	pool := lru.NewLRUCache[string, ClientInterface](128)
 	cache := lru.NewTTLCache[string, Credentials](128)
+	instanceIdCache := lru.NewLRUCache[string, string](128)
 	return &Client{
-		ramCred:    cred,
-		clientPool: pool,
-		credCache:  cache,
+		ramCred:         cred,
+		clientPool:      pool,
+		credCache:       cache,
+		instanceIdCache: instanceIdCache,
 	}, nil
 }
 
@@ -75,9 +78,16 @@ func (c *Client) WithRamCredential(cred credentials.Credential) *Client {
 	return c
 }
 
+func credentialCacheKey(registry Registry) string {
+	if registry.InstanceId != "" {
+		return registry.InstanceId
+	}
+	return registry.Domain
+}
+
 func (c *Client) getCredentials(client ClientInterface, registry Registry) (*Credentials, error) {
-	instanceId := registry.InstanceId
-	cred, ok := c.credCache.Get(instanceId)
+	key := credentialCacheKey(registry)
+	cred, ok := c.credCache.Get(key)
 	if ok && cred.ExpireTime.UTC().Sub(time.Now().UTC()) > time.Minute {
 		return &cred, nil
 	}
@@ -86,7 +96,7 @@ func (c *Client) getCredentials(client ClientInterface, registry Registry) (*Cre
 	if err != nil {
 		return nil, err
 	}
-	c.credCache.Set(instanceId, *credPtr, credPtr.ExpireTime.UTC().Sub(time.Now().UTC()))
+	c.credCache.Set(key, *credPtr, credPtr.ExpireTime.UTC().Sub(time.Now().UTC()))
 
 	return credPtr, nil
 }
@@ -120,13 +130,26 @@ func (c *Client) insertClient(domain string, client ClientInterface) {
 }
 
 func (c *Client) ensureInstanceId(client ClientInterface, registry *Registry) error {
-	if registry.InstanceId == "" {
-		instanceId, err := client.getInstanceId(*registry)
-		if err != nil {
-			return err
-		}
-		registry.InstanceId = instanceId
+	if registry.InstanceId != "" {
+		return nil
 	}
+
+	// Personal edition does not have an instance id.
+	if !registry.IsEE {
+		return nil
+	}
+
+	if instanceId, ok := c.instanceIdCache.Get(registry.Domain); ok {
+		registry.InstanceId = instanceId
+		return nil
+	}
+
+	instanceId, err := client.getInstanceId(*registry)
+	if err != nil {
+		return err
+	}
+	c.instanceIdCache.Set(registry.Domain, instanceId)
+	registry.InstanceId = instanceId
 	return nil
 }
 

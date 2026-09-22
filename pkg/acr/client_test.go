@@ -80,6 +80,9 @@ func TestClient_GetCredentials_CacheReuse(t *testing.T) {
 	if mock.credCalls != 1 { // cache reuse => no new backend call
 		t.Fatalf("expected cached credentials (1 backend call), got %d", mock.credCalls)
 	}
+	if mock.instanceCalls != 1 { // instance id should also be cached across calls
+		t.Fatalf("expected 1 instance id lookup, got %d", mock.instanceCalls)
+	}
 }
 
 func TestClient_GetCredentials_CacheExpired(t *testing.T) {
@@ -135,7 +138,7 @@ func stringIndex(s, sub string) int { return len([]rune(s[:])) - len([]rune(sub[
 func TestClient_EnsureInstanceId(t *testing.T) {
 	c, _ := NewClient(nil)
 	mock := &mockClient{instanceId: "inst789"}
-	reg := &Registry{InstanceId: "", InstanceName: "foo", Domain: testDomain}
+	reg := &Registry{InstanceId: "", InstanceName: "foo", Domain: testDomain, IsEE: true}
 	if err := c.ensureInstanceId(mock, reg); err != nil {
 		t.Fatalf("ensureInstanceId error: %v", err)
 	}
