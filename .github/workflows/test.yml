@@ -54,3 +54,6 @@ jobs:
 
       - name: Test
         run: make test
+
+      - name: Test pkg/acr
+        run: cd pkg/acr && go test -v ./...

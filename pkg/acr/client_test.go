@@ -158,6 +158,92 @@ func TestClient_EnsureInstanceId(t *testing.T) {
 	}
 }
 
+func TestClient_EnsureInstanceId_PersonalSkipsLookup(t *testing.T) {
+	c, _ := NewClient(nil)
+	mock := &mockClient{instanceId: "inst789"}
+	// personal edition registry: IsEE is false
+	reg := &Registry{InstanceId: "", InstanceName: "", Domain: "registry.cn-hangzhou.aliyuncs.com", IsEE: false}
+	if err := c.ensureInstanceId(mock, reg); err != nil {
+		t.Fatalf("ensureInstanceId error: %v", err)
+	}
+	if mock.instanceCalls != 0 {
+		t.Fatalf("personal edition should not lookup instance id, got %d calls", mock.instanceCalls)
+	}
+	if reg.InstanceId != "" {
+		t.Fatalf("expected empty instance id for personal edition, got %q", reg.InstanceId)
+	}
+}
+
+func TestClient_EnsureInstanceId_CacheReused(t *testing.T) {
+	c, _ := NewClient(nil)
+	mock := &mockClient{instanceId: "inst-cached"}
+	// simulate the same EE domain being parsed again with an empty InstanceId
+	reg1 := &Registry{InstanceId: "", InstanceName: "foo", Domain: testDomain, IsEE: true}
+	if err := c.ensureInstanceId(mock, reg1); err != nil {
+		t.Fatalf("ensureInstanceId first call error: %v", err)
+	}
+	if mock.instanceCalls != 1 {
+		t.Fatalf("expected 1 instance lookup, got %d", mock.instanceCalls)
+	}
+
+	reg2 := &Registry{InstanceId: "", InstanceName: "foo", Domain: testDomain, IsEE: true}
+	if err := c.ensureInstanceId(mock, reg2); err != nil {
+		t.Fatalf("ensureInstanceId second call error: %v", err)
+	}
+	if mock.instanceCalls != 1 {
+		t.Fatalf("expected instance id to be served from cache, got %d lookups", mock.instanceCalls)
+	}
+	if reg2.InstanceId != "inst-cached" {
+		t.Fatalf("expected cached instance id, got %q", reg2.InstanceId)
+	}
+}
+
+func TestClient_GetCredentials_PersonalCacheIsolation(t *testing.T) {
+	t.Setenv(envInstanceId, "")
+	t.Setenv(envRegion, "")
+	c, _ := NewClient(nil)
+
+	domain1 := "registry.cn-hangzhou.aliyuncs.com"
+	domain2 := "registry.cn-beijing.aliyuncs.com"
+	mock1 := &mockClient{creds: &Credentials{UserName: "u1", Password: "p1", ExpireTime: time.Now().Add(10 * time.Minute)}}
+	mock2 := &mockClient{creds: &Credentials{UserName: "u2", Password: "p2", ExpireTime: time.Now().Add(10 * time.Minute)}}
+	c.insertClient(domain1, mock1)
+	c.insertClient(domain2, mock2)
+	logger := logrus.New()
+
+	cred1, err := c.GetCredentials(domain1, logger)
+	if err != nil {
+		t.Fatalf("GetCredentials(%q) error: %v", domain1, err)
+	}
+	cred2, err := c.GetCredentials(domain2, logger)
+	if err != nil {
+		t.Fatalf("GetCredentials(%q) error: %v", domain2, err)
+	}
+
+	// personal edition registries must not share cached credentials
+	if cred1.UserName != "u1" || cred1.Password != "p1" {
+		t.Fatalf("unexpected credentials for %q: %+v", domain1, cred1)
+	}
+	if cred2.UserName != "u2" || cred2.Password != "p2" {
+		t.Fatalf("unexpected credentials for %q: %+v", domain2, cred2)
+	}
+
+	// both should be served from their own cache entry on the second call
+	if _, err := c.GetCredentials(domain1, logger); err != nil {
+		t.Fatalf("second GetCredentials(%q) error: %v", domain1, err)
+	}
+	if _, err := c.GetCredentials(domain2, logger); err != nil {
+		t.Fatalf("second GetCredentials(%q) error: %v", domain2, err)
+	}
+	if mock1.credCalls != 1 || mock2.credCalls != 1 {
+		t.Fatalf("expected each backend called once, got mock1=%d mock2=%d", mock1.credCalls, mock2.credCalls)
+	}
+	// personal edition must not lookup instance id
+	if mock1.instanceCalls != 0 || mock2.instanceCalls != 0 {
+		t.Fatalf("personal edition should not lookup instance id, got mock1=%d mock2=%d", mock1.instanceCalls, mock2.instanceCalls)
+	}
+}
+
 func TestClient_EnsureInstanceId_NoCallWhenPreset(t *testing.T) {
 	c, _ := NewClient(nil)
 	mock := &mockClient{instanceId: "inst000"}
