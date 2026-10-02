@@ -3,7 +3,7 @@ module github.com/mozillazg/docker-credential-acr-helper
 go 1.25.0
 
 require (
-	github.com/docker/docker-credential-helpers v0.8.0
+	github.com/docker/docker-credential-helpers v0.9.5
 	github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.1.0
 	github.com/sirupsen/logrus v1.9.3
 )
