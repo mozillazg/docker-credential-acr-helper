@@ -2,8 +2,10 @@ name: Release
 
 on:
   push:
+    # Only release the root module. Nested module tags (e.g. pkg/acr/vX.Y.Z)
+    # are published to the Go module proxy and must not trigger GoReleaser.
     tags:
-      - '*'
+      - 'v*'
 
 permissions:
   contents: write
