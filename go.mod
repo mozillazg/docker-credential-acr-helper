@@ -1,6 +1,6 @@
 module github.com/mozillazg/docker-credential-acr-helper
 
-go 1.23.0
+go 1.25.0
 
 require (
 	github.com/docker/docker-credential-helpers v0.8.0
@@ -28,8 +28,8 @@ require (
 	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/phuslu/lru v1.0.18 // indirect
 	github.com/tjfoc/gmsm v1.3.2 // indirect
-	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/net v0.55.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
