@@ -4,7 +4,7 @@ go 1.23.0
 
 require (
 	github.com/docker/docker-credential-helpers v0.8.0
-	github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.2.2
+	github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.1.0
 	github.com/sirupsen/logrus v1.9.3
 )
 
@@ -33,5 +33,3 @@ require (
 	golang.org/x/sys v0.31.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 )
-
-replace github.com/mozillazg/docker-credential-acr-helper/pkg/acr => ./pkg/acr
