@@ -2,13 +2,14 @@ package acr
 
 import (
 	"fmt"
-	"github.com/aliyun/credentials-go/credentials"
-	"github.com/sirupsen/logrus"
 	"time"
 
-	cr2016 "github.com/alibabacloud-go/cr-20160607/client"
-	openapi "github.com/alibabacloud-go/darabonba-openapi/client"
-	util "github.com/alibabacloud-go/tea-utils/service"
+	"github.com/aliyun/credentials-go/credentials"
+	"github.com/sirupsen/logrus"
+
+	cr2016 "github.com/alibabacloud-go/cr-20160607/v2/client"
+	openapi "github.com/alibabacloud-go/darabonba-openapi/v2/client"
+	util "github.com/alibabacloud-go/tea-utils/v2/service"
 	"github.com/alibabacloud-go/tea/tea"
 )
 
