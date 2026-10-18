@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/docker/docker-credential-helpers v0.9.9
 	github.com/mozillazg/docker-credential-acr-helper/pkg/acr v0.2.2
-	github.com/sirupsen/logrus v1.9.3
+	github.com/sirupsen/logrus v1.10.2
 )
 
 require (
